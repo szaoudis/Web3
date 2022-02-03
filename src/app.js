@@ -119,7 +119,28 @@ App = {
           loader.hide()
           content.show()
         }
+      },
+
+      makeTransaction: async() => {
+        //Transaction payload
+        const transactionParameters = {
+          nonce: '0x00', // ignored by MetaMask
+          gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation.
+          gas: '0x5500', // customizable by user during MetaMask confirmation.
+          to: '0xAd160fC4e443368B7bBEBc4714eF351849409ef0', // Required except during contract publications.
+          from: ethereum.selectedAddress, // must match user's active address.
+          value: '0xDE0B6B3A7640000', // Only required to send ether to the recipient from the initiating external account.
+          data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057', // Optional, but used for defining smart contract creation and interaction.
+          chainId: '0x3', // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+        };
+
+        //Transaction Call
+        const txHash = await ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [transactionParameters],
+        });
       }
+      
 }
 
 $(() => {
